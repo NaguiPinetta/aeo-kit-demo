@@ -19,6 +19,9 @@ jobs:
       - name: Policy check (should pass)
         run: npm run demo:policy
 
+      - name: Policy JSON gate (contract)
+        run: npm run ci:policy:json
+
       - name: Policy fail gate (should fail)
         run: |
           if npm run demo:policy:fail; then

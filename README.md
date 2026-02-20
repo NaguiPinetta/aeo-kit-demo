@@ -4,9 +4,24 @@ Demo project for **AEO Kit**. This repo shows how to define a small, clear API a
 
 > Update this link once your main repo is public: `https://github.com/<org>/<aeo-kit>`
 
+## Why this repository exists
+
+This repository is a **reference implementation** for AEO (Agent Exposure Objects).
+
+It demonstrates how to:
+
+1. Generate agent-safe tools from a real-world OpenAPI specification
+2. Explicitly expose operations using `x-aeo-expose`
+3. Enforce trust and security policies automatically
+4. Fail CI deterministically when policies are violated
+5. Export tools for OpenAI function calling and MCP consumers
+
+There is **no manual review step** and **no runtime guesswork**.
+If CI passes, the exposed tools are safe to consume.
+
 ## What’s in this repo
 
-- **`openapi.yaml`** — Small OpenAPI 3 spec: health check and a simple `items` resource. Use it as the source of truth for your API and for codegen or docs.
+- **`openapi.yaml`** — TVMaze User API OpenAPI 3.0 spec, used as the source of truth for codegen and docs. This demo intentionally uses the TVMaze User API as a large, real-world OpenAPI specification to demonstrate AEO behavior at scale (40+ exposed operations).
 - **`README.md`** — This file: purpose of the repo and how to use it.
 - **`.gitignore`** — Ignores `.aeo/` so tool output and generated artifacts stay local.
 
@@ -43,17 +58,18 @@ npx aeo-agent mcp > mcp-tools.json
 
 See `openapi.yaml` for full request/response schemas.
 
-## Policy demo
+## Policy demo (pass + fail)
 
-AEO Kit includes a policy gate (`aeo check`) that enforces rules against the generated `.aeo/` artifacts. This repo ships a policy that requires every `write`/`admin` tool to have a trust record.
+AEO Kit includes a policy gate (`aeo check`) that enforces rules against the generated `.aeo/` artifacts. This repo ships a policy requiring every `write`/`admin` tool to have a trust record. See [`policy.aeo.md`](policy.aeo.md) for the human-readable contract and `aeo.config.ts` for enforcement keys.
 
-### Pass case
+### Pass
 
 ```bash
-npm run demo:policy
+npm run demo:policy        # build + text check (0 findings)
+npm run ci:policy:json     # build + JSON contract gate (ok: true)
 ```
 
-This runs `aeo build` then `aeo check`. Because `create-item` (a write tool) has a trust entry, the check passes with 0 findings.
+`demo:policy` runs `aeo build` then `aeo check` in text mode. `ci:policy:json` does the same but parses the JSON output and gates on `ok === true` — this is the pattern you'd use in CI.
 
 ### Fail case
 
@@ -61,48 +77,7 @@ This runs `aeo build` then `aeo check`. Because `create-item` (a write tool) has
 npm run demo:policy:fail
 ```
 
-This builds artifacts, strips the trust record for `create-item`, and re-runs `aeo check`. The policy gate fires and `aeo check` exits non-zero:
-
-```
-✗ Write tool missing trust record
-  Tool "create-item" has write/admin intent but no trust entry.
-```
-
-### Policy file
-
-See [`policy.aeo.md`](policy.aeo.md) for the human-readable policy. The enforcement config lives in `aeo.config.ts` under the `policy` key.
-
-## CI Policy Gate
-
-Every pull request is automatically checked for policy violations. The workflow
-runs the full AEO pipeline and fails the PR if any findings exist:
-
-```bash
-npm ci
-npx aeo build              # generate .aeo/ artifacts from openapi.yaml
-npx aeo check --format json # enforce policies — exit 1 on any finding
-```
-
-The JSON output makes violations easy to parse in CI logs:
-
-```json
-{
-  "ok": false,
-  "findings": [
-    {
-      "id": "policy-missing-trust:create-item",
-      "severity": "error",
-      "message": "Tool \"create-item\" has write/admin intent but no trust entry.",
-      "toolId": "create-item",
-      "path": ".aeo/trust.json",
-      "hint": "Add x-aeo-trust to the operation in your OpenAPI spec."
-    }
-  ]
-}
-```
-
-See [`.github/workflows/aeo-policy-gate.yml`](.github/workflows/aeo-policy-gate.yml)
-for the full workflow.
+Builds artifacts, temporarily strips the trust record for the first `write`/`admin` tool, and re-runs `aeo check`. The policy gate fires and exits non-zero. The original `trust.json` is always restored afterward, even on error.
 
 ## Reproducibility
 

@@ -1,18 +1,17 @@
 #!/usr/bin/env node
 /**
- * Proves the policy gate works: builds artifacts, removes the trust record
- * for a write/admin-intent tool, then runs `aeo check` which must exit non-zero.
+ * Proves the policy gate fires: removes a write/admin tool's trust record,
+ * runs `aeo check --format json`, and asserts it fails.
+ * Always restores the original trust.json via a finally block.
  */
-import { readFile, writeFile } from "node:fs/promises";
-import { execSync } from "node:child_process";
+import { readFileSync, writeFileSync, copyFileSync, unlinkSync } from "node:fs";
+import { spawnSync } from "node:child_process";
 
 const INTENTS_PATH = ".aeo/intents.json";
 const TRUST_PATH = ".aeo/trust.json";
+const TRUST_BAK = ".aeo/trust.json.bak";
 
-console.log("→ Building .aeo/ artifacts…");
-execSync("npx aeo build --openapi ./openapi.yaml", { stdio: "inherit" });
-
-const intents = JSON.parse(await readFile(INTENTS_PATH, "utf8"));
+const intents = JSON.parse(readFileSync(INTENTS_PATH, "utf8"));
 const writeIntent = intents.intents.find(
   (i) => i.intent === "write" || i.intent === "admin",
 );
@@ -23,21 +22,46 @@ if (!writeIntent) {
   );
 }
 
-const targetId = writeIntent.id;
-console.log(`→ Removing trust record for: ${targetId}`);
+const targetId = writeIntent.id ?? writeIntent.toolId;
 
-const trust = JSON.parse(await readFile(TRUST_PATH, "utf8"));
-trust.trust = trust.trust.filter((t) => t.id !== targetId);
-await writeFile(TRUST_PATH, JSON.stringify(trust, null, 2) + "\n");
+copyFileSync(TRUST_PATH, TRUST_BAK);
 
-console.log("→ Running aeo check (expecting failure)…");
 try {
-  execSync("npx aeo check", { stdio: "inherit" });
-  throw new Error("Expected policy check to fail but it passed");
-} catch (err) {
-  if (err.status && err.status !== 0) {
-    console.log(`✓ aeo check exited ${err.status} — policy gate works.`);
-    process.exit(0);
+  console.log(`→ Removing trust record for: ${targetId}`);
+  const trust = JSON.parse(readFileSync(TRUST_PATH, "utf8"));
+  trust.trust = trust.trust.filter(
+    (t) => (t.id ?? t.toolId) !== targetId,
+  );
+  writeFileSync(TRUST_PATH, JSON.stringify(trust, null, 2) + "\n");
+
+  console.log("→ Running aeo check (expecting failure)…");
+  const result = spawnSync("npx", ["aeo", "check", "--format", "json"], {
+    encoding: "utf8",
+    stdio: ["inherit", "pipe", "inherit"],
+  });
+
+  const out = result.stdout ?? "";
+  let report;
+  try {
+    report = JSON.parse(out);
+  } catch {
+    // Non-JSON output with non-zero exit is still a valid failure
+    if (result.status !== 0) {
+      console.log(`✓ aeo check exited ${result.status} — policy gate works.`);
+      console.log("expected failure ✅");
+      process.exit(0);
+    }
+    throw new Error("aeo check returned invalid JSON and exited 0");
   }
-  throw err;
+
+  if (result.status === 0 && report.ok === true) {
+    throw new Error("Expected policy check to fail but it passed");
+  }
+
+  console.log(`✓ aeo check exited ${result.status} — policy gate works.`);
+  console.log(JSON.stringify(report, null, 2));
+  console.log("expected failure ✅");
+} finally {
+  copyFileSync(TRUST_BAK, TRUST_PATH);
+  try { unlinkSync(TRUST_BAK); } catch {}
 }
