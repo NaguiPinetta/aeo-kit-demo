@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "demo:policy": "npx aeo build --openapi ./openapi.yaml && npx aeo check",
+    "demo:policy:fail": "node scripts/policy-fail.mjs"
+  },
   "devDependencies": {
     "@aeo-kit/agent": "^0.1.2",
     "@aeo-kit/cli": "^0.1.2"

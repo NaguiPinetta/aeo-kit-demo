@@ -43,6 +43,35 @@ npx aeo-agent mcp > mcp-tools.json
 
 See `openapi.yaml` for full request/response schemas.
 
+## Policy demo
+
+AEO Kit includes a policy gate (`aeo check`) that enforces rules against the generated `.aeo/` artifacts. This repo ships a policy that requires every `write`/`admin` tool to have a trust record.
+
+### Pass case
+
+```bash
+npm run demo:policy
+```
+
+This runs `aeo build` then `aeo check`. Because `create-item` (a write tool) has a trust entry, the check passes with 0 findings.
+
+### Fail case
+
+```bash
+npm run demo:policy:fail
+```
+
+This builds artifacts, strips the trust record for `create-item`, and re-runs `aeo check`. The policy gate fires and `aeo check` exits non-zero:
+
+```
+✗ Write tool missing trust record
+  Tool "create-item" has write/admin intent but no trust entry.
+```
+
+### Policy file
+
+See [`policy.aeo.md`](policy.aeo.md) for the human-readable policy. The enforcement config lives in `aeo.config.ts` under the `policy` key.
+
 ## Reproducibility
 
 This repo intentionally keeps generated artifacts out of Git:

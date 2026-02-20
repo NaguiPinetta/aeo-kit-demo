@@ -10,15 +10,12 @@
 
 export default {
   openapi: {
-    // Path to your OpenAPI spec (YAML or JSON)
     path: "./openapi.yaml",
   },
-  // policy: {
-  //   requireExposedMin: 1,
-  //   denyToolIds: [],
-  //   requireTrustForWrite: false,
-  //   requireAuthForWrite: false,
-  //   requireRateLimitForWrite: false,
-  //   requireClassificationForWrite: false,
-  // },
+  // Human-readable policy: ./policy.aeo.md
+  // Enforcement keys (validated by aeo check):
+  policy: {
+    requireExposedMin: 1,
+    requireTrustForWrite: true,
+  },
 };
