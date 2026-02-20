@@ -1,0 +1,28 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  policy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Policy check (should pass)
+        run: npm run demo:policy
+
+      - name: Policy fail gate (should fail)
+        run: |
+          if npm run demo:policy:fail; then
+            echo "::error::Expected policy check to fail but it passed"
+            exit 1
+          fi
+          echo "expected failure ✅"
