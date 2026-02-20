@@ -1,0 +1,7 @@
+# AEO tool output and generated artifacts
+.aeo/
+
+# AEO generated artifacts
+.aeo/
+openai-tools.json
+mcp-tools.json
