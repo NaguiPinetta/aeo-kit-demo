@@ -1,7 +1,4 @@
-# AEO tool output and generated artifacts
-.aeo/
+node_modules/
 
-# AEO generated artifacts
+# AEO generated artifacts (reproducible via `npx @aeo-kit/cli build`)
 .aeo/
-openai-tools.json
-mcp-tools.json

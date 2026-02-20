@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "@aeo-kit/agent": "^0.1.2",
+    "@aeo-kit/cli": "^0.1.2"
+  }
+}

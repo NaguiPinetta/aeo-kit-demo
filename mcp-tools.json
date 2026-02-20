@@ -1,0 +1,78 @@
+[
+  {
+    "name": "get-health",
+    "description": "Health check",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/health",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": false,
+        "source": "derived",
+        "auth": {
+          "schemes": [],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "name": "list-items",
+    "description": "List items",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer"
+        }
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/items",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": false,
+        "source": "derived",
+        "auth": {
+          "schemes": [],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "name": "create-item",
+    "description": "Create item",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "x-aeo": {
+      "method": "POST",
+      "path": "/items",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": false,
+        "source": "derived",
+        "auth": {
+          "schemes": [],
+          "scopes": []
+        }
+      }
+    }
+  }
+]

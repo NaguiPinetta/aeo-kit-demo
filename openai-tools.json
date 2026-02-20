@@ -1,0 +1,87 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "get-health",
+      "description": "Health check",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/health",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": false,
+        "source": "derived",
+        "auth": {
+          "schemes": [],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "list-items",
+      "description": "List items",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/items",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": false,
+        "source": "derived",
+        "auth": {
+          "schemes": [],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "create-item",
+      "description": "Create item",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "POST",
+      "path": "/items",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": false,
+        "source": "derived",
+        "auth": {
+          "schemes": [],
+          "scopes": []
+        }
+      }
+    }
+  }
+]
