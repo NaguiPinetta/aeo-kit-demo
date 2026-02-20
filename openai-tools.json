@@ -2,66 +2,8 @@
   {
     "type": "function",
     "function": {
-      "name": "get-health",
-      "description": "Health check",
-      "parameters": {
-        "type": "object",
-        "additionalProperties": true
-      }
-    },
-    "x-aeo": {
-      "method": "GET",
-      "path": "/health",
-      "intent": {
-        "intent": "read",
-        "source": "derived"
-      },
-      "trust": {
-        "required": false,
-        "source": "derived",
-        "auth": {
-          "schemes": [],
-          "scopes": []
-        }
-      }
-    }
-  },
-  {
-    "type": "function",
-    "function": {
-      "name": "list-items",
-      "description": "List items",
-      "parameters": {
-        "type": "object",
-        "properties": {
-          "limit": {
-            "type": "integer"
-          }
-        }
-      }
-    },
-    "x-aeo": {
-      "method": "GET",
-      "path": "/items",
-      "intent": {
-        "intent": "read",
-        "source": "derived"
-      },
-      "trust": {
-        "required": false,
-        "source": "derived",
-        "auth": {
-          "schemes": [],
-          "scopes": []
-        }
-      }
-    }
-  },
-  {
-    "type": "function",
-    "function": {
-      "name": "create-item",
-      "description": "Create item",
+      "name": "post-auth-poll",
+      "description": "Poll whether an authentication request was confirmed",
       "parameters": {
         "type": "object",
         "additionalProperties": true
@@ -69,16 +11,1297 @@
     },
     "x-aeo": {
       "method": "POST",
-      "path": "/items",
+      "path": "/auth/poll",
       "intent": {
         "intent": "write",
         "source": "derived"
       },
       "trust": {
-        "required": false,
+        "required": true,
         "source": "derived",
         "auth": {
-          "schemes": [],
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "post-auth-start",
+      "description": "Start an authentication request",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "POST",
+      "path": "/auth/start",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-auth-validate",
+      "description": "Validate your authentication credentials",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/auth/validate",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "post-scrobble-episodes",
+      "description": "Mark episodes as acquired or watched based on their IDs",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "POST",
+      "path": "/scrobble/episodes",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "put-scrobble-episodes-episode-id",
+      "description": "Mark an episode as acquired or watched based on its ID",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "PUT",
+      "path": "/scrobble/episodes/{episode_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "post-scrobble-shows",
+      "description": "Mark episodes within a show as acquired or watched based on their attributes",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tvmaze_id": {
+            "type": "integer",
+            "description": "The show's TVmaze ID"
+          },
+          "thetvdb_id": {
+            "type": "integer",
+            "description": "The show's TheTVDB ID"
+          },
+          "imdb_id": {
+            "type": "integer",
+            "description": "The show's IMDB ID"
+          }
+        }
+      }
+    },
+    "x-aeo": {
+      "method": "POST",
+      "path": "/scrobble/shows",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-scrobble-shows-show-id",
+      "description": "List watched and acquired episodes for a show",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/scrobble/shows/{show_id}",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-episodes",
+      "description": "List the marked episodes",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "show_id": {
+            "type": "integer",
+            "description": "Only return episodes from this specific show"
+          }
+        }
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/episodes",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-episodes-episode-id",
+      "description": "Check if an episode is marked",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/episodes/{episode_id}",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "put-user-episodes-episode-id",
+      "description": "Mark an episode",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "PUT",
+      "path": "/user/episodes/{episode_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "delete-user-episodes-episode-id",
+      "description": "Unmark an episode",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "DELETE",
+      "path": "/user/episodes/{episode_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-follows-networks",
+      "description": "List the followed networks",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "embed": {
+            "type": "string",
+            "description": "Embed full network info"
+          }
+        }
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/follows/networks",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-follows-networks-network-id",
+      "description": "Check if a network is followed",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/follows/networks/{network_id}",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "put-user-follows-networks-network-id",
+      "description": "Follow a network",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "PUT",
+      "path": "/user/follows/networks/{network_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "delete-user-follows-networks-network-id",
+      "description": "Unfollow a network",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "DELETE",
+      "path": "/user/follows/networks/{network_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-follows-people",
+      "description": "List the followed people",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "embed": {
+            "type": "string",
+            "description": "Embed full person info"
+          }
+        }
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/follows/people",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-follows-people-person-id",
+      "description": "Check if a person is followed",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/follows/people/{person_id}",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "put-user-follows-people-person-id",
+      "description": "Follow a person",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "PUT",
+      "path": "/user/follows/people/{person_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "delete-user-follows-people-person-id",
+      "description": "Unfollow a person",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "DELETE",
+      "path": "/user/follows/people/{person_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-follows-shows",
+      "description": "List the followed shows",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "embed": {
+            "type": "string",
+            "description": "Embed full show info"
+          }
+        }
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/follows/shows",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-follows-shows-show-id",
+      "description": "Check if a show is followed",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/follows/shows/{show_id}",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "put-user-follows-shows-show-id",
+      "description": "Follow a show",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "PUT",
+      "path": "/user/follows/shows/{show_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "delete-user-follows-shows-show-id",
+      "description": "Unfollow a show",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "DELETE",
+      "path": "/user/follows/shows/{show_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-follows-webchannels",
+      "description": "List the followed webchannels",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "embed": {
+            "type": "string",
+            "description": "Embed full webchannel info"
+          }
+        }
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/follows/webchannels",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-follows-webchannels-webchannel-id",
+      "description": "Check if a webchannel is followed",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/follows/webchannels/{webchannel_id}",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "put-user-follows-webchannels-webchannel-id",
+      "description": "Follow a webchannel",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "PUT",
+      "path": "/user/follows/webchannels/{webchannel_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "delete-user-follows-webchannels-webchannel-id",
+      "description": "Unfollow a webchannel",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "DELETE",
+      "path": "/user/follows/webchannels/{webchannel_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-tags",
+      "description": "List all tags",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/tags",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "post-user-tags",
+      "description": "Create a new tag",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "POST",
+      "path": "/user/tags",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "patch-user-tags-tag-id",
+      "description": "Update a specific tag",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tag_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tag_id"
+        ]
+      }
+    },
+    "x-aeo": {
+      "method": "PATCH",
+      "path": "/user/tags/{tag_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "delete-user-tags-tag-id",
+      "description": "Delete a specific tag",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tag_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tag_id"
+        ]
+      }
+    },
+    "x-aeo": {
+      "method": "DELETE",
+      "path": "/user/tags/{tag_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-tags-tag-id-shows",
+      "description": "List all shows under this tag",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tag_id": {
+            "type": "integer"
+          },
+          "embed": {
+            "type": "string",
+            "description": "Embed full show info"
+          }
+        },
+        "required": [
+          "tag_id"
+        ]
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/tags/{tag_id}/shows",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "put-user-tags-tag-id-shows-show-id",
+      "description": "Tag a show",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tag_id": {
+            "type": "integer"
+          },
+          "show_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tag_id",
+          "show_id"
+        ]
+      }
+    },
+    "x-aeo": {
+      "method": "PUT",
+      "path": "/user/tags/{tag_id}/shows/{show_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "delete-user-tags-tag-id-shows-show-id",
+      "description": "Untag a show",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "tag_id": {
+            "type": "integer"
+          },
+          "show_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "tag_id",
+          "show_id"
+        ]
+      }
+    },
+    "x-aeo": {
+      "method": "DELETE",
+      "path": "/user/tags/{tag_id}/shows/{show_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-votes-episodes",
+      "description": "List the episodes voted for",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/votes/episodes",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-votes-episodes-episode-id",
+      "description": "Check if an episode is voted for",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/votes/episodes/{episode_id}",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "put-user-votes-episodes-episode-id",
+      "description": "Vote for an episode",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "PUT",
+      "path": "/user/votes/episodes/{episode_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "delete-user-votes-episodes-episode-id",
+      "description": "Remove an episode vote",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "DELETE",
+      "path": "/user/votes/episodes/{episode_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-votes-shows",
+      "description": "List the shows voted for",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "embed": {
+            "type": "string",
+            "description": "Embed full show info"
+          }
+        }
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/votes/shows",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get-user-votes-shows-show-id",
+      "description": "Check if a show is voted for",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "GET",
+      "path": "/user/votes/shows/{show_id}",
+      "intent": {
+        "intent": "read",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "put-user-votes-shows-show-id",
+      "description": "Vote for a show",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "PUT",
+      "path": "/user/votes/shows/{show_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
+          "scopes": []
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "delete-user-votes-shows-show-id",
+      "description": "Remove a show vote",
+      "parameters": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "x-aeo": {
+      "method": "DELETE",
+      "path": "/user/votes/shows/{show_id}",
+      "intent": {
+        "intent": "write",
+        "source": "derived"
+      },
+      "trust": {
+        "required": true,
+        "source": "derived",
+        "auth": {
+          "schemes": [
+            "usertoken"
+          ],
           "scopes": []
         }
       }
