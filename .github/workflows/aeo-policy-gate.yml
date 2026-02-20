@@ -1,0 +1,23 @@
+name: AEO Policy Gate
+
+on:
+  pull_request:
+
+jobs:
+  aeo-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build AEO artifacts
+        run: npx aeo build
+
+      - name: Enforce policies
+        run: npx aeo check --format json

@@ -72,6 +72,38 @@ This builds artifacts, strips the trust record for `create-item`, and re-runs `a
 
 See [`policy.aeo.md`](policy.aeo.md) for the human-readable policy. The enforcement config lives in `aeo.config.ts` under the `policy` key.
 
+## CI Policy Gate
+
+Every pull request is automatically checked for policy violations. The workflow
+runs the full AEO pipeline and fails the PR if any findings exist:
+
+```bash
+npm ci
+npx aeo build              # generate .aeo/ artifacts from openapi.yaml
+npx aeo check --format json # enforce policies — exit 1 on any finding
+```
+
+The JSON output makes violations easy to parse in CI logs:
+
+```json
+{
+  "ok": false,
+  "findings": [
+    {
+      "id": "policy-missing-trust:create-item",
+      "severity": "error",
+      "message": "Tool \"create-item\" has write/admin intent but no trust entry.",
+      "toolId": "create-item",
+      "path": ".aeo/trust.json",
+      "hint": "Add x-aeo-trust to the operation in your OpenAPI spec."
+    }
+  ]
+}
+```
+
+See [`.github/workflows/aeo-policy-gate.yml`](.github/workflows/aeo-policy-gate.yml)
+for the full workflow.
+
 ## Reproducibility
 
 This repo intentionally keeps generated artifacts out of Git:
